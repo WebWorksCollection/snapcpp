@@ -36,7 +36,8 @@ nothing to commit, working directory clean
 
 
 # Check out a copy from the repository
-git clone git://git.code.sf.net/p/snapcpp/code snapcpp
+#git clone git://git.code.sf.net/p/snapcpp/code snapcpp -- very old, not up to date
+git clone --recursive git@github.com:m2osw/snapcpp
 
 # check what you've changed (verify that you want to commit all of those)
 git diff ["<filename>"]
@@ -206,6 +207,15 @@ git push origin master
 # # #
 # # #	modified:   snapwebsites
 
+# Try a:
+git rebase --continue
+
+# if the error presists (i.e. in most cases because of an empty patch)
+# Then do:
+git rebase --skip
+
+# That should move you back to the branch you were working on. Then do:
+git push origin master
 
 
 
@@ -216,7 +226,7 @@ git push origin master
 #          load properly; the https://... method won't work with sub-
 #          modules at this time
 #
-git clone --recursive git@github.com/m2osw/snapcpp
+git clone --recursive git@github.com:m2osw/snapcpp
 
 
 # If you already cloned the top module (snapcpp) then you can clone all
@@ -224,6 +234,22 @@ git clone --recursive git@github.com/m2osw/snapcpp
 #
 cd snapcpp
 git submodule update --init --recursive
+
+
+# When new submodules where added, the --init --recursive is not enough
+# to checkout the new submodules, the one way I found so far that works
+# is to specify which submodule to initialize:
+#
+cd snapcpp/contrib
+git submodule update --init snapdev
+
+
+# To add a new submodule, simple use the add command with the URL of the
+# submodule; the URL can be found in .git/config file of the submodule
+# project directory. You want to create a project with the submodule FIRST.
+# (i.e. git init, git add, git commit, git remote add origin ..., git push.)
+#
+git submodule add git@github.com:m2osw/snaplogger.git
 
 
 # When checking the status of a parent module you may see the following
@@ -234,6 +260,7 @@ git submodule update --init --recursive
 #
 # This means you need to commit data in that submodule and then commit
 # that commit in the parent.
+#
 cd snapwebsites
 git commit .
 git push origin master

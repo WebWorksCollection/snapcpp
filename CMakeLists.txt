@@ -59,13 +59,23 @@ find_package( SnapBuild REQUIRED )
 
 ################################################################################
 #
-ConfigureMakeProject( PROJECT_NAME cmake COMPONENT contrib )
+ConfigureMakeProject(
+    PROJECT_NAME
+        cmake
+    COMPONENT
+        contrib
+)
 #
 # Include snapwebsites projects next
 #
 add_subdirectory( contrib      )
 
-ConfigureMakeProject( PROJECT_NAME snapwebsites COMPONENT main )
+ConfigureMakeProject(
+    PROJECT_NAME
+        snapwebsites
+    COMPONENT
+        main
+)
 
 BuildRepro    ( "main" )
 CreateTargets ( "top"  )

@@ -22,6 +22,7 @@ apt-get install \
     gcc \
     g++ \
     libboost-all-dev \
+    libicu-dev \
     libmagic-dev \
     libmagick++-dev \
     libncurses-dev \
@@ -39,25 +40,49 @@ apt-get install \
     mysql-server \
     qt5-default \
     qtscript5-dev \
-    libreadline-dev \
     uuid-dev \
     zip \
     zlib1g-dev
 
-# TBD: get the cassandra-cpp-driver and cassandra-cpp-driver-dev packages
-echo "WARNING:"
-echo "  At this time this script does not offer the cassandra-cpp-driver packages."
-echo "  You have to get your own version compiled and packaged."
+# Build
+
+if test "$1" = "--build"
+then
+    sudo apt-get install \
+        pbuilder \
+        reprepro
+
+    shift
+fi
 
 # Optional:
 
 if test "$1" = "--optional"
 then
+    if ! test -x /usr/bin/X
+    then
+        echo
+        echo "WARNING:"
+        echo "  Installing the optional dependencies will force an installation"
+        echo "  if the X server (because of graphviz)"
+        echo "  Are you sure you want to proceed? yes/[no] \c"
+        read answer
+        if test answer != "yes"
+        then
+            echo "warning: optional packages not installed."
+            exit 1
+        fi
+    fi
+    # cloc/lcov -- coverage
+    # doxygen/graphviz -- documentation
+    # libqxcppunit-dev -- unit testing (not working since 18.04)
+    # qtxmlpatterns5-dev-tools -- for developers to run xmlpatterns
     apt-get install \
+        cloc \
         doxygen \
         graphviz \
         lcov \
-        libicu-dev \
+        libgvpr2 \
         qtxmlpatterns5-dev-tools
 
     if apt-cache show libqxcppunit-dev >/dev/null
